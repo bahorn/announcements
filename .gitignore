@@ -3,3 +3,9 @@ venv
 env
 .venv
 .env
+# Google OAuth credentials.
+credentials.json
+token.pickle
+
+# JetBrains
+.idea/
