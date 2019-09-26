@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-    <script src="/static/connecting.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-</body>
+<html>	
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<meta property="og:url" content="https://hackthemidlands.com/board">
+		<meta property="og:title" content="HackTheMidlands">
+		<meta property="og:type" content="website">
+		<meta property="og:description" content="Announcement and Countdown Display Board for HackTheMidlands">
+		<meta property="og:image" content="https://hackthemidlands.com/images/logos/logo-full.png">
+
+		<title>HackTheMidlands</title>
+		<link rel="icon" href="/static/resources/logo-full.png">
+
+		<!-- Using Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		
+		<link rel="stylesheet" href="/static/css/main.css">
+
+		<!-- Google Fonts used -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap" rel="stylesheet">
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<div class="header">
+			<img src="/static/resources/logo-full.png" id="logo">
+			<h1 id="title">HackTheMidlands 4.0</h1>
+		</div>
+
+		<div id="count-clock" class="clock">00:00:00</div>
+		<div id="real-clock" class="clock"></div>
+		<div id="announcement"></div>
+		<div id="bar"></div>
+
+		<script type="text/javascript" src="/static/js/main.js"></script>
+	</body>
 </html>

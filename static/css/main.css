@@ -1,0 +1,78 @@
+/* Global Variables*/
+:root {
+	--bg-color: #2f3c63;
+	--fg-color: white;
+	--font: "Roboto";
+	--font-1: "Open Sans";
+	--font-2: "sans-serif";
+}
+
+body {
+	background: var(--bg-color);
+	color: var(--fg-color);
+	font-family: var(--font), var(--font-1), var(--font-2);
+}
+
+.header {
+	display: block;
+	margin: 5vh auto 0px auto; /* top right btm left*/
+	text-align: center;
+	width: 75%;
+}
+
+#logo {
+	max-width: 150px;
+	max-height: 150px;
+	width: auto;
+	height: auto;
+}
+
+#title {
+	display: inline-block;
+	vertical-align: middle;
+	height: 100%;
+	margin-left: 1vw;
+}
+
+/* IMPORTANT: These are default values of time only display, will be overriden by JS */
+
+#count-clock {
+	display: block;
+	margin: 7vh auto 0px auto; /* top right btm left*/
+	text-align: center;
+	width: 75%;
+	font-size: 15em;
+}
+
+#real-clock {
+	display: block;
+	margin: 0px auto;
+	text-align: center;
+	width: 50%;
+	font-size: 3em;
+}
+
+#announcement {
+	display: block;
+	margin: 7vh auto;
+	text-align: center;
+	width: 90%;
+	height: 100vh;
+	font-size: 7vw;
+}
+
+#bar {
+	height: 20px;
+	width: 100%;
+	background-color: var(--fg-color);
+	animation-name: bar-timer;
+	animation-duration: 30s;
+	animation-timing-function: linear;
+	position: absolute;
+	bottom: 0;
+}
+
+@keyframes bar-timer {
+  0% {width: 100%;}
+  100% {width: 0%;}
+}
