@@ -1,6 +1,6 @@
 # Announcements for HackTheMidlands
 
-## Setup
+## Running
 
 Installation of dependencies:
 
@@ -9,3 +9,7 @@ Installation of dependencies:
 Running:
 
     $ python app.py
+
+Running in development mode:
+
+    $ python app.py --debug
