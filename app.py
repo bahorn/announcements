@@ -10,8 +10,11 @@ def index():
 
 @app.route('/announce')
 def hello():
-    socketio.emit('announcement', 'hello there!')
+    announce('hello there!')
     return 'done'
+
+def announce(message):
+    socketio.emit('announcement', message)
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0')
