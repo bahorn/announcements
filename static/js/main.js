@@ -1,21 +1,22 @@
 // Parameters
-var endDate = new Date(2019, 9, 27, 12, 0).getTime(); //TODO Check this date //remember month is 0-indexed and day is 1-indexed
-var displayTime = 30000;
+const endDate = new Date(2019, 9, 27, 12, 0).getTime(); //TODO Check this date //remember month is 0-indexed and day is 1-indexed
+const displayTime = 30000;
 
 // Global Varibles
-var countdown = document.getElementById("countdown");
-var countClock = document.getElementById("count-clock");
-var realClock = document.getElementById("real-clock");
-var announcementDiv = document.getElementById("announcement");
-var bar = document.getElementById("bar");
-var displaying = false;
-var queue = []; 
+const countdown = document.getElementById("countdown");
+const countClock = document.getElementById("count-clock");
+const realClock = document.getElementById("real-clock");
+const announcementDiv = document.getElementById("announcement");
+const bar = document.getElementById("bar");
+
+let displaying = false;
+let queue = []; 
 
 function updateTime(){
-	var dateNow = new Date();
-	var h = dateNow.getHours(); // 0-23 hours
-	var m = dateNow.getMinutes(); // 0-59 - minutes
-	var s = dateNow.getSeconds(); // 0-59 - seconds
+	let dateNow = new Date();
+	let h = dateNow.getHours(); // 0-23 hours
+	let m = dateNow.getMinutes(); // 0-59 - minutes
+	let s = dateNow.getSeconds(); // 0-59 - seconds
 
 	// CURRENT TIME
 	//time formatting as 2 digits
@@ -27,10 +28,10 @@ function updateTime(){
 	realClock.textContent = time; // may not work in IE
 
 	// COUNTDOWN TIME
-	var remainingTime = endDate - dateNow.getTime();
-	var hoursLeft = Math.floor((remainingTime % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60));
-  	var minutesLeft = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-  	var secondsLeft = Math.floor((remainingTime % (1000 * 60)) / 1000);
+	let remainingTime = endDate - dateNow.getTime();
+	let hoursLeft = Math.floor((remainingTime % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60));
+  	let minutesLeft = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+  	let secondsLeft = Math.floor((remainingTime % (1000 * 60)) / 1000);
   	
   	if (secondsLeft < 10 && minutesLeft != 0) {
   		secondsLeft = "0" + secondsLeft;
@@ -38,7 +39,7 @@ function updateTime(){
   	if (minutesLeft < 10 && hoursLeft != 0) {
  		minutesLeft = "0" + minutesLeft;
    	}
-   	var timeLeft = secondsLeft;
+   	let timeLeft = secondsLeft;
    	timeLeft = minutesLeft > 0 ? minutesLeft + ":" + timeLeft : timeLeft;
    	timeLeft = hoursLeft > 0 ? hoursLeft + ":" + timeLeft : timeLeft;
 
@@ -81,7 +82,7 @@ function loop() {
 	// main logic for getting and pushing announcements
 	if (displaying == false) {
 		if (queue.length > 0) {
-			var announcementText = queue.shift();
+			const announcementText = queue.shift();
 			console.log(announcementText);
 			announcement(announcementText);
 		}
@@ -94,7 +95,7 @@ function main() { // the display board logic
 	updateTime(); // the timers are always updated;
 	setDisplayTimeOnly(); // always start on default display
 
-    var socket = io();
+    let socket = io();
     socket.on('connect', function () {});
     socket.on('announcement', function (data) {
 		queue.push(data);
