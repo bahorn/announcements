@@ -1,6 +1,7 @@
 import argparse
 from flask import Flask, render_template, redirect
 from flask_socketio import SocketIO
+from flask_assets import Environment, Bundle
 
 import threading
 from sheet import Sheets
@@ -14,6 +15,11 @@ def background():
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+
+assets = Environment(app)
+assets.url = app.static_url_path
+scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
+assets.register('scss_all', scss)
 
 @app.route('/')
 def index():

@@ -14,9 +14,11 @@
 		<link rel="icon" href="/static/resources/logo-full.png">
 
 		<!-- Using Bootstrap -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"> -->
 		
-		<link rel="stylesheet" href="/static/css/main.css">
+		{% assets "scss_all" %}
+		<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+		{% endassets %}
 
 		<!-- Google Fonts used -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap" rel="stylesheet">
@@ -29,10 +31,12 @@
 			<h1 id="title">HackTheMidlands 4.0</h1>
 		</div>
 
-		<div id="count-clock" class="clock">00:00:00</div>
-		<div id="real-clock" class="clock"></div>
-		<div id="announcement"></div>
-		<div id="bar"></div>
+		<div id="countdown" class="display-time">
+			<div id="count-clock" class="clock">00:00:00</div>
+			<div id="real-clock" class="clock"></div>
+			<div id="announcement"></div>
+			<div id="bar"></div>
+		</div>
 
 		<script type="text/javascript" src="/static/js/main.js"></script>
 	</body>

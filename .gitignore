@@ -1,8 +1,16 @@
+# python
+__pycache__/
+
 # virtualenv
-venv
-env
-.venv
-.env
+venv/
+env/
+.venv/
+.env/
+
+# webassets
+.webassets-cache/
+build/
+
 # Google OAuth credentials.
 credentials.json
 token.pickle

@@ -7,6 +7,7 @@ var alertForegroundColor = "black";
 var normalForegroundColor = "white";
 
 // Global Varibles
+var countdown = document.getElementById("countdown");
 var countClock = document.getElementById("count-clock");
 var realClock = document.getElementById("real-clock");
 var announcementDiv = document.getElementById("announcement");
@@ -49,6 +50,7 @@ function updateTime(){
    	if (remainingTime < 0) {
    		timeLeft = "TIME'S UP!"; //TODO Change the wording here
    		countClock.style.fontSize = "10em";
+		countdown.classList.add("time-up");
    	}
 
   	countClock.innerText = timeLeft;
@@ -60,19 +62,8 @@ function updateTime(){
 function setDisplayTimeOnly() {
 	displaying = false;
 
-	// displays only the countdown clock and the real time clock, sets any announcement to empty string 
-	countClock.style.display = "block";
-	realClock.style.display = "block";
-	announcementDiv.style.display = "none";
-	announcementDiv.innerText = "";
-	announcementDiv.textContent = "";
-	bar.style.display = "none";
-
-	//resets the size style of the clocks
-	countClock.style.margin = "7vh auto 0px auto";
-	countClock.style.fontSize = "15em";
-	realClock.style.margin = "0px auto"; 
-	realClock.style.fontSize = "3em";
+	countdown.classList.add("display-time");
+	countdown.classList.remove("announcement");
 
 	//reset page style
 	document.body.style.background = normalBackgroundColor;
@@ -80,23 +71,17 @@ function setDisplayTimeOnly() {
 }
 
 function announcement(announcementText) {	
+	countdown.classList.add("announcement");
+	countdown.classList.remove("display-time");
+
 	// displays the time remaining in small, and the announcement text
 	// AUTOMATICALLY RESETS AFTER TIMEOUT
 	displaying = true;
 	// set display
-	countClock.style.display = "block";
-	realClock.style.display = "none";
-	announcementDiv.style.display = "block";
 	announcementDiv.innerText = announcementText;
 	announcementDiv.textContent = announcementText;
 	
 	bar.style.animationDuration = (displayTime / 1000) + "s";
-	bar.style.backgroundColor = alertForegroundColor;
-	bar.style.display = "block";
-
-	// styles
-	countClock.style.margin = "7vh auto 0px auto";
-	countClock.style.fontSize = "5em";
 
 	// alert colour
 	document.body.style.background = alertBackgroundColor;
