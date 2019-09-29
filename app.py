@@ -1,6 +1,16 @@
 import argparse
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask_socketio import SocketIO
+
+import threading
+from sheet import Sheets
+
+def background():
+    s = Sheets('13_6S-dBLfNY0eKRULjIliKjr-sLfuv4iS5mX-0e78pA','A1:C')
+    s.credentials()
+    s.build_service()
+    announce(s.get_first()[1])
+    
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -13,6 +23,12 @@ def index():
 def hello():
     announce('hello there!')
     return 'done'
+
+@app.route('/sheet')
+def sheet():
+    b = threading.Thread(name='background', target=background)
+    b.start()
+    return redirect('/')
 
 def announce(message):
     socketio.emit('announcement', message)
