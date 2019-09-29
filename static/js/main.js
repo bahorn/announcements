@@ -1,10 +1,6 @@
 // Parameters
 var endDate = new Date(2019, 9, 27, 12, 0).getTime(); //TODO Check this date //remember month is 0-indexed and day is 1-indexed
 var displayTime = 30000;
-var alertBackgroundColor = "#f15a22";
-var normalBackgroundColor = "#2f3c63";
-var alertForegroundColor = "black";
-var normalForegroundColor = "white";
 
 // Global Varibles
 var countdown = document.getElementById("countdown");
@@ -49,7 +45,6 @@ function updateTime(){
    	//Above does not account for passing the end date since:
    	if (remainingTime < 0) {
    		timeLeft = "TIME'S UP!"; //TODO Change the wording here
-   		countClock.style.fontSize = "10em";
 		countdown.classList.add("time-up");
    	}
 
@@ -64,10 +59,6 @@ function setDisplayTimeOnly() {
 
 	countdown.classList.add("display-time");
 	countdown.classList.remove("announcement");
-
-	//reset page style
-	document.body.style.background = normalBackgroundColor;
-	document.body.style.color = normalForegroundColor;
 }
 
 function announcement(announcementText) {	
@@ -82,10 +73,6 @@ function announcement(announcementText) {
 	announcementDiv.textContent = announcementText;
 	
 	bar.style.animationDuration = (displayTime / 1000) + "s";
-
-	// alert colour
-	document.body.style.background = alertBackgroundColor;
-	document.body.style.color = alertForegroundColor;
 
 	setTimeout(setDisplayTimeOnly, displayTime);
 }
