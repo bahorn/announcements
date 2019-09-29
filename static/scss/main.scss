@@ -75,7 +75,7 @@ body {
 #bar {
   height: 20px;
   width: 100%;
-  background-color: var(--fg-color);
+  background-color: $alert-foreground-color;
   animation-name: bar-timer;
   animation-duration: 30s;
   animation-timing-function: linear;
