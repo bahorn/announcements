@@ -6,7 +6,8 @@ const displayTime = 30000;
 const countdown = document.getElementById("countdown");
 const countClock = document.getElementById("count-clock");
 const realClock = document.getElementById("real-clock");
-const announcementDiv = document.getElementById("announcement");
+const announcementTitleDiv = document.getElementById("announcement-title");
+const announcementBodyDiv = document.getElementById("announcement-body");
 const bar = document.getElementById("bar");
 
 let displaying = false;
@@ -70,8 +71,10 @@ function announcement(announcementText) {
 	// AUTOMATICALLY RESETS AFTER TIMEOUT
 	displaying = true;
 	// set display
-	announcementDiv.innerText = announcementText;
-	announcementDiv.textContent = announcementText;
+	announcementTitleDiv.innerText = announcementText[1];
+	announcementTitleDiv.textContent = announcementText[1];
+	announcementBodyDiv.innerText = announcementText[2];
+	announcementBodyDiv.textContent = announcementText[2];
 	
 	bar.style.animationDuration = (displayTime / 1000) + "s";
 

@@ -10,7 +10,7 @@ def background():
     s = Sheets('13_6S-dBLfNY0eKRULjIliKjr-sLfuv4iS5mX-0e78pA','A1:C')
     s.credentials()
     s.build_service()
-    announce(s.get_first()[1])
+    announce(s.get_first())
     
 
 app = Flask(__name__)
@@ -34,9 +34,10 @@ def hello():
 def sheet():
     b = threading.Thread(name='background', target=background)
     b.start()
-    return redirect('/')
+    return 'done'
 
 def announce(message):
+    print('Announcing: ' + str(message))
     socketio.emit('announcement', message)
 
 if __name__ == "__main__":
