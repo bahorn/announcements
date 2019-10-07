@@ -66,15 +66,15 @@ function setDisplayTimeOnly() {
 function announcement(announcementText) {	
 	countdown.classList.add("announcement");
 	countdown.classList.remove("display-time");
-
+	let json = JSON.parse(announcementText);
 	// displays the time remaining in small, and the announcement text
 	// AUTOMATICALLY RESETS AFTER TIMEOUT
 	displaying = true;
 	// set display
-	announcementTitleDiv.innerText = announcementText[1];
-	announcementTitleDiv.textContent = announcementText[1];
-	announcementBodyDiv.innerText = announcementText[2];
-	announcementBodyDiv.textContent = announcementText[2];
+	announcementTitleDiv.innerText = json['title'];
+	announcementTitleDiv.textContent = json['title'];
+	announcementBodyDiv.innerText = json['body'];
+	announcementBodyDiv.textContent = json['body'];
 	
 	bar.style.animationDuration = (displayTime / 1000) + "s";
 

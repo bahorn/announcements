@@ -1,17 +1,22 @@
 import argparse
-from flask import Flask, render_template, redirect
-from flask_socketio import SocketIO
-from flask_assets import Environment, Bundle
-
+import json
 import threading
+
+from flask import Flask, render_template
+from flask_assets import Bundle, Environment
+from flask_socketio import SocketIO
+
 from sheet import Sheets
 
+
 def background():
-    s = Sheets('13_6S-dBLfNY0eKRULjIliKjr-sLfuv4iS5mX-0e78pA','A1:C')
+    s = Sheets('1KfJJVpKwtQ4SMnCmvFRnWNZ4uIchqjknptZ4orqSlLs', 'A1:C')
     s.credentials()
     s.build_service()
-    announce(s.get_first())
-    
+    announcement = s.get_first()
+    announce(json.dumps(announcement.__dict__, default=str))
+    announce([str(announcement.time), str(announcement.title), str(announcement.body)])
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
