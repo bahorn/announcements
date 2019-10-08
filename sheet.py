@@ -19,7 +19,7 @@ class Sheets:
     def __init__(self, SPREADSHEET_ID, RANGE):
         self.SPREADSHEET_ID = SPREADSHEET_ID
         self.RANGE = RANGE
-        self.SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+        self.SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
         self.creds = None
         self.service = None
 
@@ -63,33 +63,38 @@ class Sheets:
         result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
         values = result.get('values', [])
 
-        return values
+        return self.parse_all(values[1:])
 
     @staticmethod
     def parse_all(values):
         new_values = []
         for value in values:
+            time = None
             if len(value) == 4:
-                new_values.append(Announcement(time_id=value[0], title=value[1], body=value[2], time=value[3]))
-            else:
-                new_values.append(Announcement(time_id=value[0], title=value[1], body=value[2], time=None))
+                time = value[3]
+            new_values.append(
+                Announcement(uid=value[0], created_at=value[1], time=time, title=value[3], body=value[4],
+                             active=value[5]))
         return new_values
 
     def get_first(self):
         return self.get_all()[1]
 
-
-# def main():
-# 	service = build('sheets', 'v4', credentials=creds)
-
-# 	# Call the Sheets API
+    def set_active(self, announcement: Announcement, active: bool):
+        sheet = self.service.spreadsheets().values()
+        range_name = "F" + str(int(announcement.uid) + 1)
+        values = [str(active).upper()]
+        body = {
+            'values': [values],
+            'majorDimension': 'COLUMNS',
+        }
+        sheet.update(
+            spreadsheetId=self.SPREADSHEET_ID, range=range_name,
+            valueInputOption='RAW', body=body).execute()
 
 
 if __name__ == '__main__':
-    s = Sheets('13_6S-dBLfNY0eKRULjIliKjr-sLfuv4iS5mX-0e78pA', 'A1:C')
+    s = Sheets('1zpAS0cWZS5zxrGPYQPhpFv__4vSbWKx33azCpSTOiIQ', 'A1:F')
     s.credentials()
     s.build_service()
-    # s.print_range()
-    print(s.get_first())
-
-# main()
+    s.set_active(s.get_first(), False)

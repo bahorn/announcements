@@ -9,13 +9,18 @@ from flask_socketio import SocketIO
 from sheet import Sheets
 
 
+# queue = {}
+
+
 def background():
-    s = Sheets('1KfJJVpKwtQ4SMnCmvFRnWNZ4uIchqjknptZ4orqSlLs', 'A1:C')
+    s = Sheets('1zpAS0cWZS5zxrGPYQPhpFv__4vSbWKx33azCpSTOiIQ', 'A1:F')
     s.credentials()
     s.build_service()
-    announcement = s.get_first()
-    announce(json.dumps(announcement.__dict__, default=str))
-    announce([str(announcement.time), str(announcement.title), str(announcement.body)])
+    announcements = s.get_all()
+    if len(announcements) > 0:
+        announcement = announcements.pop(0)
+        announce(json.dumps(announcement.__dict__, default=str))
+        s.set_active(announcement, False)
 
 
 app = Flask(__name__)
@@ -26,14 +31,17 @@ assets.url = app.static_url_path
 scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/announce')
 def hello():
     announce('hello there!')
     return 'done'
+
 
 @app.route('/sheet')
 def sheet():
@@ -41,9 +49,11 @@ def sheet():
     b.start()
     return 'done'
 
+
 def announce(message):
     print('Announcing: ' + str(message))
     socketio.emit('announcement', message)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
