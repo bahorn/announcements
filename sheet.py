@@ -1,5 +1,7 @@
+import datetime
 import os.path
 import pickle
+from pprint import pprint
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -9,13 +11,6 @@ from Announcement import Announcement
 
 
 class Sheets:
-    # If modifying these scopes, delete the file token.pickle.
-
-    # The ID and range of a sample spreadsheet.
-    # SPREADSHEET_ID = '13_6S-dBLfNY0eKRULjIliKjr-sLfuv4iS5mX-0e78pA'
-    # RANGE = 'A1:C'
-    # creds = None
-    # service = None
     def __init__(self, SPREADSHEET_ID, RANGE):
         self.SPREADSHEET_ID = SPREADSHEET_ID
         self.RANGE = RANGE
@@ -65,16 +60,24 @@ class Sheets:
 
         return self.parse_all(values[1:])
 
+    def get_active(self):
+        return list(filter(lambda x: x.active is True, self.get_all()))
+
+    def get_current_active(self, delta: datetime.timedelta):
+        now = datetime.datetime.now()
+        print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
+        for a in self.get_active():
+            print(a.time)
+        return list(filter(lambda x: now - delta <= x.time <= now + delta, self.get_active()))
+
     @staticmethod
     def parse_all(values):
         new_values = []
         for value in values:
-            time = None
-            if len(value) == 4:
-                time = value[3]
+            time = datetime.datetime.strptime(value[2], "%d/%m/%Y %H:%M:%S")
             new_values.append(
                 Announcement(uid=value[0], created_at=value[1], time=time, title=value[3], body=value[4],
-                             active=value[5]))
+                             active=(value[5] == 'TRUE')))
         return new_values
 
     def get_first(self):
@@ -83,18 +86,12 @@ class Sheets:
     def set_active(self, announcement: Announcement, active: bool):
         sheet = self.service.spreadsheets().values()
         range_name = "F" + str(int(announcement.uid) + 1)
-        values = [str(active).upper()]
+        value = str(active).upper()
         body = {
-            'values': [values],
-            'majorDimension': 'COLUMNS',
+            'values': [[value]],
         }
+        pprint(body)
         sheet.update(
             spreadsheetId=self.SPREADSHEET_ID, range=range_name,
             valueInputOption='RAW', body=body).execute()
 
-
-if __name__ == '__main__':
-    s = Sheets('1zpAS0cWZS5zxrGPYQPhpFv__4vSbWKx33azCpSTOiIQ', 'A1:F')
-    s.credentials()
-    s.build_service()
-    s.set_active(s.get_first(), False)

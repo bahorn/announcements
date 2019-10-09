@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import json
 import threading
 
@@ -9,18 +10,17 @@ from flask_socketio import SocketIO
 from sheet import Sheets
 
 
-# queue = {}
-
-
 def background():
-    s = Sheets('1zpAS0cWZS5zxrGPYQPhpFv__4vSbWKx33azCpSTOiIQ', 'A1:F')
+    s = Sheets('1wpSA1YsQguMT4tqulLR-1niqKHO8oM5qbGne3SWcOzE', 'A1:F')
     s.credentials()
     s.build_service()
-    announcements = s.get_all()
+    announcements = s.get_current_active(datetime.timedelta(days=1))
     if len(announcements) > 0:
         announcement = announcements.pop(0)
         announce(json.dumps(announcement.__dict__, default=str))
         s.set_active(announcement, False)
+    else:
+        print("no announcements")
 
 
 app = Flask(__name__)
