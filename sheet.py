@@ -1,14 +1,12 @@
 import datetime
 import os.path
 import pickle
-from pprint import pprint
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from Announcement import Announcement
-
 
 class Sheets:
     def __init__(self, SPREADSHEET_ID, RANGE):
@@ -60,14 +58,21 @@ class Sheets:
 
         return self.parse_all(values[1:])
 
+    def get_past(self):
+        return list(filter(lambda x: x.time < datetime.datetime.now().time(), self.get_all()))
+
+    def reset_all(self):
+        for a in self.get_all():
+            self.set_active(a, True)
+
     def get_active(self):
         return list(filter(lambda x: x.active is True, self.get_all()))
 
     def get_current_active(self, delta: datetime.timedelta):
         now = datetime.datetime.now()
-        print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
-        for a in self.get_active():
-            print(a.time)
+        # print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
+        # for a in self.get_active():
+        #     print(a.time)
         return list(filter(lambda x: now - delta <= x.time <= now + delta, self.get_active()))
 
     @staticmethod
@@ -86,12 +91,10 @@ class Sheets:
     def set_active(self, announcement: Announcement, active: bool):
         sheet = self.service.spreadsheets().values()
         range_name = "F" + str(int(announcement.uid) + 1)
-        value = str(active).upper()
         body = {
-            'values': [[value]],
+            'values': [[active]],
         }
-        pprint(body)
+        # pprint(body)
         sheet.update(
             spreadsheetId=self.SPREADSHEET_ID, range=range_name,
             valueInputOption='RAW', body=body).execute()
-

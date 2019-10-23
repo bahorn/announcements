@@ -1,46 +1,85 @@
-<!DOCTYPE html>
-<html>	
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "bootstrap/base.html" %}
+{#{% block head %}#}
+{#    <meta charset="utf-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">#}
+{#{% endblock %}#}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <link rel="icon" type="image/ico" href="{{ url_for('.static',filename='favicon.ico') }}">
+{% endblock %}
 
-		<meta property="og:url" content="https://hackthemidlands.com/board">
-		<meta property="og:title" content="HackTheMidlands">
-		<meta property="og:type" content="website">
-		<meta property="og:description" content="Announcement and Countdown Display Board for HackTheMidlands">
-		<meta property="og:image" content="https://hackthemidlands.com/images/logos/logo-full.png">
+{% block scripts %}
+    {{ super() }}
 
-		<title>HackTheMidlands</title>
-		<link rel="icon" href="/static/resources/logo-full.png">
-
-		<!-- Using Bootstrap -->
-		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"> -->
-		
-		{% assets "scss_all" %}
-		<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-		{% endassets %}
-
-		<!-- Google Fonts used -->
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap" rel="stylesheet">
-
-		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-	</head>
-	<body>
-		<div id="countdown">
-			<div class="header">
-				<img src="/static/resources/logo-full.png" id="logo">
-				<h1 id="title">HackTheMidlands 4.0</h1>
-			</div>
-
-			<div id="count-clock" class="clock">00:00:00</div>
-			<div id="real-clock" class="clock"></div>
-			<div id="announcement">
-                <div id="announcement-title"></div>
-                <div id="announcement-body"></div>
+    <script src="{{ url_for('.static', filename='assets/js/script.min.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+{% endblock %}
+{% block title %}Announcements{% endblock %}
+{% assets "scss_all" %}
+    <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+{% endassets %}
+{% block content %}
+    <div class="container d-sm-flex flex-grow-1 flex-fill m-auto justify-content-sm-center align-items-sm-center">
+        <div class="d-sm-flex m-auto justify-content-sm-center align-items-sm-center" id="overlay">
+            <div class="card text-black-50 bg-warning border rounded shadow-lg d-sm-flex jumbotron">
+                <div class="card-header text-capitalize text-center bg-white">
+                    <h1 class="display-1" id="alert-title"></h1>
+                </div>
+                <div class="card-body">
+                    <p class="lead text-black-50 card-text" id="alert-body"></p>
+                </div>
             </div>
-			<div id="bar"></div>
-		</div>
+            <div id="bar"></div>
+        </div>
+    </div>
 
-		<script type="text/javascript" src="/static/js/main.js"></script>
-	</body>
-</html>
+    <body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid">
+                        <div class="row d-lg-flex align-items-lg-center">
+                            <div class="col"><img src="{{ url_for('.static', filename='assets/img/header_title.png') }}"
+                                                  width="200px"></div>
+                            {#                            <div id="count-clock" class="clock">00:00:00</div>#}
+                        </div>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-1">Announcements</h3>
+                    <div class="col">
+                        <div class="card-columns" id="announcements">
+                            {#                            <h1>Hi, {{ user.username }}!</h1>#}
+                            {% for post in posts %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">{{ post.title }}</h4>
+                                        <h6 class="text-muted card-subtitle mb-2">{{ post.time }}</h6>
+                                        <p class="card-text">{{ post.body }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright">
+                        <span>Copyright © HackTheMidlands Annoucements 2019</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        {#        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>#}
+    </div>
+    </body>
+    <audio id="notification" src="{{ url_for('.static',filename='notification.mp3') }}" preload="auto"></audio>
+{% endblock %}
