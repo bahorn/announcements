@@ -17,3 +17,6 @@ token.pickle
 
 # JetBrains
 .idea/
+/credentials/
+/.terraform/
+/terraform.tfstate
