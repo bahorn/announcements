@@ -9,7 +9,6 @@ services:
     image: "traefik:v2.0.0-rc3"
     container_name: "traefik"
     command:
-      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik-network"
@@ -23,9 +22,8 @@ services:
       - 'LE:/letsencrypt/'
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     ports:
-      - 8080:8080
       - 80:80
-      - 44334:443
+      - 443:443
     networks:
       - traefik-network
   announcements:
@@ -34,8 +32,8 @@ services:
       context: .
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.announcement.rule=Host(`live.chasbob.co.uk`)"
-      - "traefik.http.routers.announcement.entrypoints=web"
+      - "traefik.http.routers.announcement.rule=Host(`live.hackthemidlands.com`)"
+      - "traefik.http.routers.announcement.entrypoints=websecure"
       - "traefik.http.routers.announcement.tls.certresolver=myhttpchallenge"
       - "traefik.http.middlewares.HTTPtoHTTPS.redirectscheme.scheme=https"
       - "traefik.http.services.announcement.loadbalancer.server.port=5000"
