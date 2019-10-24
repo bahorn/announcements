@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  announcements:
+    container_name: announcements
+    build:
+      context: .
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.announcement.rule=Host(`live.hackthemidlands.com`)"
+      - "traefik.http.routers.announcement.entrypoints=websecure"
+      - "traefik.http.routers.announcement.tls.certresolver=myhttpchallenge"
+      - "traefik.http.middlewares.HTTPtoHTTPS.redirectscheme.scheme=https"
+  traefik:
+    image: "traefik:v2.0.0-rc3"
+    container_name: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myhttpchallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+
