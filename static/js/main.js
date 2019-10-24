@@ -61,26 +61,20 @@ function setDisplayTimeOnly() {
     console.log("display time only");
     displaying = false;
     off();
-    // countdown.classList.add("display-time");
-    // countdown.classList.remove("announcement");
 }
 
 function on() {
     console.log("overlay on");
-    // overlay.style.display = "block";
     overlay.style.visibility = "visible";
 }
 
 function off() {
     console.log("overlay off");
-    // overlay.style.display = "none";
     overlay.style.visibility = "hidden";
 }
 
 function announcement(announcementText) {
     audio.play().then(() => console.log("Playing sound!"));
-    // countdown.classList.add("announcement");
-    // countdown.classList.remove("display-time");
     let json = JSON.parse(announcementText);
     // displays the time remaining in small, and the announcement text
     // AUTOMATICALLY RESETS AFTER TIMEOUT
@@ -108,26 +102,10 @@ function loop() {
     setTimeout(loop, 1000);
 }
 
-// function main() { // the display board logic
-//     updateTime(); // the timers are always updated;
-//     setDisplayTimeOnly(); // always start on default display
-//     console.log("Setting up socket...");
-//     let socket = io();
-//     socket.on('connect', function () {
-//     });
-//     socket.on('announcement', function (data) {
-//         console.log(data);
-//         queue.push(data);
-//     });
-//
-//     loop();
-// }
-
-// window.addEventListener('load', main);
 
 $(document).ready(function () {
     //connect to the socket server.
-    const socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    const socket = io.connect('https://' + document.domain + ':' + location.port + '/test');
     console.log("Ready");
     //receive details from server
     // updateTime(); // the timers are always updated;
@@ -142,20 +120,3 @@ $(document).ready(function () {
 
     loop();
 });
-
-// $(document).ready(function () {
-//     setDisplayTimeOnly(); // always start on default display
-//
-//     var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-//     socket.on('announcement', function (msg) {
-//         $('#log').append('<p>Received: ' + msg.data + '</p>');
-//     });
-//     // $('form#emit').submit(function(event) {
-//     //     socket.emit('my event', {data: $('#emit_data').val()});
-//     //     return false;
-//     // });
-//     // $('form#broadcast').submit(function(event) {
-//     //     socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
-//     //     return false;
-//     // });
-// });
