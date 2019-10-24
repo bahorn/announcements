@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import logging
 import threading
 import time
 
@@ -22,7 +23,6 @@ def background():
             if len(announcements) > 0:
                 announcement = announcements.pop(0)
                 text = str(json.dumps(announcement.__dict__, default=str))
-                # print(text)
                 announce(text)
                 s.set_active(announcement, False)
             else:
@@ -39,6 +39,10 @@ assets = Environment(app)
 assets.url = app.static_url_path
 scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
+# suppress http requests in output
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def index():

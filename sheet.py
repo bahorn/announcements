@@ -59,7 +59,7 @@ class Sheets:
         return self.parse_all(values[1:])
 
     def get_past(self):
-        return list(filter(lambda x: x.time < datetime.datetime.now().time(), self.get_all()))
+        return list(filter(lambda x: x.time < datetime.datetime.now(), self.get_all()))
 
     def reset_all(self):
         for a in self.get_all():
