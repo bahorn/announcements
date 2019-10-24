@@ -117,4 +117,4 @@ if __name__ == "__main__":
                         help='run the flask server in debug mode')
     args = parser.parse_args()
 
-    socketio.run(app, host='0.0.0.0', port=5000, debug=args.debug)
+    socketio.run(app, host='live.hackthemidlands.com', port=5000, debug=args.debug)
