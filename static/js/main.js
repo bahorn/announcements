@@ -75,7 +75,8 @@ function off() {
 
 function announcement(announcementText) {
     audio.play().then(() => console.log("Playing sound!"));
-    let json = JSON.parse(announcementText);
+    // let json = JSON.parse(announcementText);
+    let json = announcementText;
     // displays the time remaining in small, and the announcement text
     // AUTOMATICALLY RESETS AFTER TIMEOUT
     displaying = true;
@@ -105,20 +106,26 @@ function loop() {
 
 $(document).ready(function () {
     //connect to the socket server.
-    const socket = io.connect('https://' + document.domain + ':' + location.port + '/test', {
-        transports: ['websocket']
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher('e26d2d5c77e1ace54c55', {
+        cluster: 'eu',
+        forceTLS: true
     });
+
+    const channel = pusher.subscribe('announcements');
+    channel.bind('new', function (data) {
+        // alert(JSON.stringify(data));
+        queue.push(data);
+        console.log(JSON.stringify(data));
+    });
+
     console.log("Ready");
     //receive details from server
     // updateTime(); // the timers are always updated;
     setDisplayTimeOnly(); // always start on default display
 
-    socket.on('connect', function () {
-    });
-    socket.on('announcement', function (data) {
-        console.log(data);
-        queue.push(data);
-    });
 
     loop();
 });
