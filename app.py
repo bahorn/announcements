@@ -9,7 +9,8 @@ from flask import Flask, render_template
 from flask_assets import Bundle, Environment
 from flask_bootstrap import Bootstrap
 from flask_socketio import SocketIO
-
+from flask_cors import CORS
+cors = CORS(app, resources={r"/*": {"origins": "live.hackthemidlands.com"}})
 from sheet import Sheets
 
 s: Sheets
@@ -117,4 +118,4 @@ if __name__ == "__main__":
                         help='run the flask server in debug mode')
     args = parser.parse_args()
 
-    socketio.run(app, host='live.hackthemidlands.com', port=5000, debug=args.debug)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=args.debug)
