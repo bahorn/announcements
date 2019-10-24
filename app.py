@@ -10,7 +10,6 @@ from flask_assets import Bundle, Environment
 from flask_bootstrap import Bootstrap
 from flask_socketio import SocketIO
 from flask_cors import CORS
-cors = CORS(app, resources={r"/*": {"origins": "live.hackthemidlands.com"}})
 from sheet import Sheets
 
 s: Sheets
@@ -40,6 +39,8 @@ assets = Environment(app)
 assets.url = app.static_url_path
 scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
+cors = CORS(app, resources={r"/*": {"origins": "live.hackthemidlands.com"}})
+
 # suppress http requests in output
 
 # log = logging.getLogger('werkzeug')
