@@ -41,8 +41,8 @@ scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
 # suppress http requests in output
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+# log = logging.getLogger('werkzeug')
+# log.setLevel(logging.ERROR)
 
 @app.route('/')
 def index():
@@ -87,6 +87,9 @@ def stop():
 def reset():
     s.reset_all()
     return 'done'
+@socketio.on('reconnect',namespace='/test')
+def test_reconnect():
+    print('Client reconnected')
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
