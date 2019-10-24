@@ -105,7 +105,9 @@ function loop() {
 
 $(document).ready(function () {
     //connect to the socket server.
-    const socket = io.connect('https://' + document.domain + ':' + location.port + '/test');
+    const socket = io.connect('https://' + document.domain + ':' + location.port + '/test', {
+        transports: ['websocket']
+    });
     console.log("Ready");
     //receive details from server
     // updateTime(); // the timers are always updated;

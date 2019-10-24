@@ -1,15 +1,15 @@
 import argparse
 import datetime
 import json
-import logging
 import threading
 import time
 
 from flask import Flask, render_template
 from flask_assets import Bundle, Environment
 from flask_bootstrap import Bootstrap
-from flask_socketio import SocketIO
 from flask_cors import CORS
+from flask_socketio import SocketIO
+
 from sheet import Sheets
 
 s: Sheets
@@ -39,7 +39,7 @@ assets = Environment(app)
 assets.url = app.static_url_path
 scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
-cors = CORS(app, resources={r"/*": {"origins": "live.hackthemidlands.com"}})
+cors = CORS(app, resources={r"/**/*": {"origins": "*", "send_wildcard": "true"}})
 
 # suppress http requests in output
 
@@ -89,7 +89,8 @@ def stop():
 def reset():
     s.reset_all()
     return 'done'
-@socketio.on('reconnect',namespace='/test')
+
+@socketio.on('reconnect', namespace='/test')
 def test_reconnect():
     print('Client reconnected')
 

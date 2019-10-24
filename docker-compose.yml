@@ -17,7 +17,6 @@ services:
       - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
       - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.myhttpchallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     volumes:
       - 'LE:/letsencrypt/'
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -34,10 +33,18 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.announcement.rule=Host(`live.hackthemidlands.com`)"
       - "traefik.http.routers.announcement.entrypoints=websecure"
+      - "traefik.http.routers.announcement.entrypoints=web"
       - "traefik.http.routers.announcement.tls.certresolver=myhttpchallenge"
       - "traefik.http.middlewares.HTTPtoHTTPS.redirectscheme.scheme=https"
       - "traefik.http.services.announcement.loadbalancer.server.port=5000"
       - "traefik.docker.network=traefik-network"
+      - "traefik.http"
     networks:
       - traefik-network
 
+http:
+  services:
+    my-service:
+      loadBalancer:
+        sticky:
+         cookie: {}
