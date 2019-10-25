@@ -89,6 +89,32 @@ function announcement(announcementText) {
     bar.style.animationDuration = (displayTime / 1000) + "s";
     on();
     setTimeout(setDisplayTimeOnly, displayTime);
+
+    // create card
+    let card = document.createElement('div');
+    card.classList.add('card');
+    let cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+    card.appendChild(cardBody);
+
+    let title = document.createElement('h4');
+    title.classList.add('card-title');
+    title.innerText = json['title'];
+    cardBody.appendChild(title);
+
+    let time = document.createElement('h6');
+    time.classList.add('text-muted', 'card-subtitle', 'mb-2');
+    time.innerText = json['time'];
+    cardBody.appendChild(time);
+
+    let body = document.createElement('p');
+    body.classList.add('card-text');
+    body.innerText = json['body'];
+    cardBody.appendChild(body);
+
+    // insert card into announcement list
+    let announcements = document.getElementById('announcements');
+    announcements.prepend(card);
 }
 
 function loop() {
