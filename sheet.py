@@ -54,13 +54,10 @@ class Sheets:
 
     def get_all(self):
         sheet = self.service.spreadsheets()
-        for i in range(20):
-            try:
-                result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
-                values = result.get('values', [])
-                return self.parse_all(values[1:])
-            except:
-                time.sleep(1)
+
+        result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
+        values = result.get('values', [])
+        return self.parse_all(values[1:])
 
     def get_past(self):
         return list(filter(lambda x: x.time < datetime.datetime.now(), self.get_all()))

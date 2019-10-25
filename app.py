@@ -2,6 +2,7 @@ import datetime
 import json
 import threading
 import time
+import sys
 
 import pusher
 from flask import Flask, render_template
@@ -16,6 +17,7 @@ sheet.credentials()
 sheet.build_service()
 
 posts: [Announcement] = sheet.get_past()
+print('Preloaded posts:', posts, file=sys.stderr)
 
 # run code in background
 def background():
@@ -23,17 +25,23 @@ def background():
     global sheet
 
     while True:
-        announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
-        if len(announcements) > 0:
-            announcement = announcements.pop(0)
-            text = str(json.dumps(announcement.__dict__, default=str))
-            send_announcement(text)
-            sheet.set_active(announcement, False)
+        try:
+            announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
+            if len(announcements) > 0:
+                announcement = announcements.pop(0)
+                text = str(json.dumps(announcement.__dict__, default=str))
+                send_announcement(text)
+                sheet.set_active(announcement, False)
 
-            posts = sheet.get_past()
-        else:
-            print("no announcements")
-        time.sleep(3)
+                posts = sheet.get_past()
+                print('Updated posts:', posts, file=sys.stderr)
+            else:
+                print("no announcements")
+
+            time.sleep(3)
+        except:
+            traceback.print_last(file=sys.stderr)
+            time.sleep(10)
 
 thread = threading.Thread(target=background)
 thread.setDaemon(True)
