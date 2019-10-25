@@ -1,14 +1,13 @@
 import datetime
 import os.path
 import pickle
-from pprint import pprint
+import time
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from Announcement import Announcement
-
 
 class Sheets:
     def __init__(self, SPREADSHEET_ID, RANGE):
@@ -55,19 +54,29 @@ class Sheets:
 
     def get_all(self):
         sheet = self.service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
-        values = result.get('values', [])
+        for i in range(20):
+            try:
+                result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
+                values = result.get('values', [])
+                return self.parse_all(values[1:])
+            except:
+                time.sleep(1)
 
-        return self.parse_all(values[1:])
+    def get_past(self):
+        return list(filter(lambda x: x.time < datetime.datetime.now(), self.get_all()))
+
+    def reset_all(self):
+        for a in self.get_all():
+            self.set_active(a, True)
 
     def get_active(self):
         return list(filter(lambda x: x.active is True, self.get_all()))
 
     def get_current_active(self, delta: datetime.timedelta):
         now = datetime.datetime.now()
-        print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
-        for a in self.get_active():
-            print(a.time)
+        # print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
+        # for a in self.get_active():
+        #     print(a.time)
         return list(filter(lambda x: now - delta <= x.time <= now + delta, self.get_active()))
 
     @staticmethod
@@ -78,6 +87,8 @@ class Sheets:
             new_values.append(
                 Announcement(uid=value[0], created_at=value[1], time=time, title=value[3], body=value[4],
                              active=(value[5] == 'TRUE')))
+        new_values.sort()
+        new_values.reverse()
         return new_values
 
     def get_first(self):
@@ -86,12 +97,10 @@ class Sheets:
     def set_active(self, announcement: Announcement, active: bool):
         sheet = self.service.spreadsheets().values()
         range_name = "F" + str(int(announcement.uid) + 1)
-        value = str(active).upper()
         body = {
-            'values': [[value]],
+            'values': [[active]],
         }
-        pprint(body)
+        # pprint(body)
         sheet.update(
             spreadsheetId=self.SPREADSHEET_ID, range=range_name,
             valueInputOption='RAW', body=body).execute()
-

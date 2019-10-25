@@ -1,131 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans&display=swap');
+
 $alert-background-color: #f15a22;
 $alert-foreground-color: black;
 $normal-background-color: #2f3c63;
 $normal-foreground-color: white;
 
 body {
-  font-family: "Roboto", "Open Sans", "sans-serif";
+  font-family: "Noto Sans", "Open Sans", "sans-serif";
   overflow: hidden;
 }
 
-#countdown {
+#overlay {
+  position: fixed;
+  visibility: hidden;
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  position: absolute;
   top: 0;
   left: 0;
-
-  background: $normal-background-color;
-  color: $normal-foreground-color;
-
-  &.announcement {
-    background: $alert-background-color;
-    color: $alert-foreground-color;
-  }
-}
-
-.header {
-  display: block;
-  margin: 5vh auto 0px auto; /* top right btm left*/
-  text-align: center;
-  width: 75%;
-}
-
-#logo {
-  max-width: 150px;
-  max-height: 150px;
-  width: auto;
-  height: auto;
-}
-
-#title {
-  display: inline-block;
-  vertical-align: middle;
-  height: 100%;
-  margin-left: 1vw;
-}
-
-#count-clock {
-  display: block;
-  margin: 7vh auto 0px auto; /* top right btm left*/
-  text-align: center;
-  width: 75%;
-  font-size: 15em;
-}
-
-#real-clock {
-  display: block;
-  margin: 0px auto;
-  text-align: center;
-  width: 50%;
-  font-size: 3em;
-}
-
-#announcement {
-  display: none;
-  margin: 7vh auto;
-  text-align: center;
-  width: 90%;
-  height: 100vh;
-  font-size: 7vw;
-}
-
-#bar {
-  height: 20px;
-  width: 100%;
-  background-color: $alert-foreground-color;
-  animation-name: bar-timer;
-  animation-duration: 30s;
-  animation-timing-function: linear;
-  position: absolute;
+  right: 0;
   bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 2;
 }
 
-#countdown.time-up {
-  #count-clock {
-    font-size: 10em;
-  }
+.scroll {
+  margin: 5px;
+  padding: 5px;
+  width: 50vh;
+  height: 80vh;
+  text-align: left;
+  overflow-x: auto
 }
 
-#countdown.display-time {
-  #real-clock {
-    display: block;
-    margin: 0px auto;
-    font-size: 3em;
-  }
-  #count-clock {
-    margin: 7vh auto 0px auto;
-    font-size: 15em;
-  }
-  #announcement {
-    display: none;
-  }
-  #bar {
-    display: none;
-  }
-}
-
-#countdown.announcement {
-  #real-clock {
-    display: none;
-  }
-  #count-clock {
-    margin: 7vh auto 0px auto;
-    font-size: 5em;
-  }
-  #announcement {
-    display: block;
-  }
-  #bar {
-    animation-duration: 0;
-    background-color: black;
-    display: block;
-  }
-}
-
-@keyframes bar-timer {
-  0% {width: 100%;}
-  100% {width: 0%;}
+.card {
+  margin-bottom: 10px;
 }
