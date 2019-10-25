@@ -9,91 +9,63 @@ from flask_assets import Bundle, Environment
 from flask_bootstrap import Bootstrap
 
 from sheet import Sheets
+from Announcement import Announcement
 
-# from flask_socketio import SocketIO
+sheet: Sheets = Sheets('1wpSA1YsQguMT4tqulLR-1niqKHO8oM5qbGne3SWcOzE', 'A1:F')
+sheet.credentials()
+sheet.build_service()
 
-s: Sheets
-is_setup: bool = False
+posts: [Announcement] = sheet.get_past()
 
+# run code in background
 def background():
-    global is_setup
+    global posts
+    global sheet
+
     while True:
-        if is_setup:
-            announcements = s.get_current_active(datetime.timedelta(minutes=1))
-            if len(announcements) > 0:
-                announcement = announcements.pop(0)
-                text = str(json.dumps(announcement.__dict__, default=str))
-                announce(text)
-                s.set_active(announcement, False)
-            else:
-                print("no announcements")
+        announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
+        if len(announcements) > 0:
+            announcement = announcements.pop(0)
+            text = str(json.dumps(announcement.__dict__, default=str))
+            send_announcement(text)
+            sheet.set_active(announcement, False)
+
+            posts = sheet.get_past()
+        else:
+            print("no announcements")
         time.sleep(3)
 
-t = threading.Thread(target=background)
-t.setDaemon(True)
+thread = threading.Thread(target=background)
+thread.setDaemon(True)
+thread.start()
 
+# create app
 app = Flask(__name__)
-# # socketio = SocketIO(app)
+
+# setup app bootstrap
 Bootstrap(app)
 assets = Environment(app)
+
+# setup app assets
 assets.url = app.static_url_path
 scss = Bundle('scss/main.scss', filters='pyscss', output='build/all.css')
 assets.register('scss_all', scss)
 
-# cors = CORS(app, resources={r"/**/*": {"origins": "*", "send_wildcard": "true"}})
-
-# suppress http requests in output
-
-# log = logging.getLogger('werkzeug')
-# log.setLevel(logging.ERROR)
-
 @app.route('/')
 def index():
-    global s
-    setup()
-
-    posts = s.get_past()
+    global posts
     return render_template('index.html', posts=posts)
 
-# @app.route('/setup')
-def setup():
-    global s
-    global is_setup
-    if not is_setup:
-        s = Sheets('1wpSA1YsQguMT4tqulLR-1niqKHO8oM5qbGne3SWcOzE', 'A1:F')
-        s.credentials()
-        s.build_service()
-        is_setup = True
-        print("setup done!")
-    return 'done'
-
 @app.route('/announce')
-def hello():
-    global s
-    setup()
-    data = s.get_first()
+def announce():
+    global sheet
+
+    data = sheet.get_first()
     text = str(json.dumps(data.__dict__, default=str))
-    announce(text)
+    send_announcement(text)
     return text
 
-# @app.route('/start')
-def start():
-    global t
-    t.start()
-    return 'done'
-
-# @app.route('/stop')
-def stop():
-    global t
-    t.join()
-    return 'done'
-
-# @app.route('/reset')
-def reset():
-    s.reset_all()
-    return 'done'
-
-def announce(message):
+def send_announcement(message):
     print('Announcing: ' + str(message))
     channels_client = pusher.Pusher(
         app_id='885408',

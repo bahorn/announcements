@@ -20,5 +20,11 @@ class Announcement:
     def __hash__(self):
         return hash(self.time_id)
 
+    def __lt__(self, other):
+        return self.time < other.time
+
+    def __gt__(self, other):
+        return self.time > other.time
+
     def __cmp__(self, other):
         return self.time < other.time

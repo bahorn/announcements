@@ -83,6 +83,8 @@ class Sheets:
             new_values.append(
                 Announcement(uid=value[0], created_at=value[1], time=time, title=value[3], body=value[4],
                              active=(value[5] == 'TRUE')))
+        new_values.sort()
+        new_values.reverse()
         return new_values
 
     def get_first(self):
