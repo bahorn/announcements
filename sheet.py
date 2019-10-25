@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import pickle
+import time
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -53,10 +54,13 @@ class Sheets:
 
     def get_all(self):
         sheet = self.service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
-        values = result.get('values', [])
-
-        return self.parse_all(values[1:])
+        for i in range(20):
+            try:
+                result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
+                values = result.get('values', [])
+                return self.parse_all(values[1:])
+            except:
+                time.sleep(1)
 
     def get_past(self):
         return list(filter(lambda x: x.time < datetime.datetime.now(), self.get_all()))

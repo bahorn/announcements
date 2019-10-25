@@ -6,28 +6,15 @@ const displayTime = 5000;
 const countdown = document.getElementById("countdown");
 const overlay = document.getElementById("overlay");
 const countClock = document.getElementById("count-clock");
-const realClock = document.getElementById("real-clock");
+// const realClock = document.getElementById("real-clock");
 const announcementTitleDiv = document.getElementById("alert-title");
 const announcementBodyDiv = document.getElementById("alert-body");
-const bar = document.getElementById("bar");
-const audio = document.getElementById('notification')
+const audio = document.getElementById('notification');
 let displaying = false;
 let queue = [];
 
 function updateTime() {
     let dateNow = new Date();
-    let h = dateNow.getHours(); // 0-23 hours
-    let m = dateNow.getMinutes(); // 0-59 - minutes
-    let s = dateNow.getSeconds(); // 0-59 - seconds
-
-    // CURRENT TIME
-    //time formatting as 2 digits
-    h = h > 9 ? h : "0" + h;
-    m = m > 9 ? m : "0" + m;
-    s = s > 9 ? s : "0" + s;
-    time = h + ":" + m + ":" + s;
-    realClock.innerText = time; // may not work in Firefox
-    realClock.textContent = time; // may not work in IE
 
     // COUNTDOWN TIME
     let remainingTime = endDate - dateNow.getTime();
@@ -86,7 +73,6 @@ function announcement(announcementText) {
     announcementBodyDiv.innerText = json['body'];
     // announcementBodyDiv.textContent = json['body'];
 
-    bar.style.animationDuration = (displayTime / 1000) + "s";
     on();
     setTimeout(setDisplayTimeOnly, displayTime);
 
@@ -97,7 +83,7 @@ function announcement(announcementText) {
     cardBody.classList.add('card-body');
     card.appendChild(cardBody);
 
-    let title = document.createElement('h4');
+    let title = document.createElement('h2');
     title.classList.add('card-title');
     title.innerText = json['title'];
     cardBody.appendChild(title);
@@ -108,7 +94,7 @@ function announcement(announcementText) {
     cardBody.appendChild(time);
 
     let body = document.createElement('p');
-    body.classList.add('card-text');
+    body.classList.add('card-text', 'h4');
     body.innerText = json['body'];
     cardBody.appendChild(body);
 
@@ -120,21 +106,19 @@ function announcement(announcementText) {
 function loop() {
     // main logic for getting and pushing announcements
     if (displaying === false) {
+        console.log("display");
         if (queue.length > 0) {
             const announcementText = queue.shift();
             announcement(announcementText);
         }
     }
-
+    updateTime();
     setTimeout(loop, 1000);
 }
 
 
 $(document).ready(function () {
     //connect to the socket server.
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-
     const pusher = new Pusher('e26d2d5c77e1ace54c55', {
         cluster: 'eu',
         forceTLS: true
@@ -142,16 +126,32 @@ $(document).ready(function () {
 
     const channel = pusher.subscribe('announcements');
     channel.bind('new', function (data) {
-        // alert(JSON.stringify(data));
         queue.push(data);
-        console.log(JSON.stringify(data));
     });
 
     console.log("Ready");
     //receive details from server
-    // updateTime(); // the timers are always updated;
+    updateTime(); // the timers are always updated;
     setDisplayTimeOnly(); // always start on default display
 
 
+    $.getJSON('http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=wrussell1999&api_key=eacc77543fa3500e1d9ef91a4b698f80&format=json', function (data) {
+        const track = data.recenttracks.track[0];
+        $('#lastfm').html(track.artist["#text"] + " - " + track.name)
+    });
+    overlay.onclick = function () {
+        off();
+    };
+
+    window.onresize = function () {
+        if (window.innerWidth < 750) {
+            document.getElementById('snazz').classList.add('flex-column');
+            document.getElementById('twitter').classList.add('d-none');
+        } else {
+            document.getElementById('snazz').classList.remove('flex-column');
+            document.getElementById('twitter').classList.remove('d-none');
+        }
+    };
+    window.onresize();
     loop();
 });

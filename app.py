@@ -79,3 +79,5 @@ def send_announcement(message):
 
 if __name__ == "__main__":
     app.run(app, host='0.0.0.0', port=5000)
+    # setup()
+    # announce(str(json.dumps(s.get_all()[10].__dict__, default=str)))

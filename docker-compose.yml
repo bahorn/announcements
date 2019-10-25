@@ -1,50 +1,8 @@
 version: '3.3'
-volumes:
-  LE:
-
-networks:
-  traefik-network:
 services:
-  traefik:
-    image: "traefik:v2.0.0-rc3"
-    container_name: "traefik"
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=traefik-network"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
-      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
-    volumes:
-      - 'LE:/letsencrypt/'
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - traefik-network
   announcements:
     container_name: announcements
     build:
       context: .
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.announcement.rule=Host(`live.hackthemidlands.com`)"
-      - "traefik.http.routers.announcement.entrypoints=websecure"
-      - "traefik.http.routers.announcement.entrypoints=web"
-      - "traefik.http.routers.announcement.tls.certresolver=myhttpchallenge"
-      - "traefik.http.middlewares.HTTPtoHTTPS.redirectscheme.scheme=https"
-      - "traefik.http.services.announcement.loadbalancer.server.port=5000"
-      - "traefik.docker.network=traefik-network"
-      - "traefik.http"
-    networks:
-      - traefik-network
-
-http:
-  services:
-    my-service:
-      loadBalancer:
-        sticky:
-         cookie: {}
+    ports:
+      - 5000:5000
