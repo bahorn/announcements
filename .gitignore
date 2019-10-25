@@ -19,4 +19,4 @@ token.pickle
 .idea/
 /credentials/
 /.terraform/
-/terraform.tfstate
+/terraform.tfstate*

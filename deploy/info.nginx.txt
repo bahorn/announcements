@@ -1,5 +1,5 @@
 server {
-    server_name live.hackthemidlands.com
+    server_name info.hackthemidlands.com
     client_max_body_size 25M;
 
     location / {
