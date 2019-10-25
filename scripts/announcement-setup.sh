@@ -21,5 +21,5 @@ ln -s /etc/nginx/sites-available/live /etc/nginx/sites-enabled/
 echo "client_max_body_size 25M;" > /etc/nginx/conf.d/client-size.conf
 sudo systemctl restart nginx
 
-certbot --non-interactive --nginx --redirect --domains live.hackthemidlands.com --agree-tos --register-unsafely-without-email --staging
+certbot --non-interactive --nginx --redirect --domains live.hackthemidlands.com --agree-tos --register-unsafely-without-email
 sudo systemctl restart nginx
