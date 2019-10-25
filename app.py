@@ -56,7 +56,7 @@ def index():
     global posts
     return render_template('index.html', posts=posts)
 
-@app.route('/announce')
+# @app.route('/announce')
 def announce():
     global sheet
 

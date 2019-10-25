@@ -135,7 +135,7 @@ $(document).ready(function () {
     setDisplayTimeOnly(); // always start on default display
 
 
-    $.getJSON('http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=wrussell1999&api_key=eacc77543fa3500e1d9ef91a4b698f80&format=json', function (data) {
+    $.getJSON('https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=wrussell1999&api_key=eacc77543fa3500e1d9ef91a4b698f80&format=json', function (data) {
         const track = data.recenttracks.track[0];
         $('#lastfm').html(track.artist["#text"] + " - " + track.name)
     });
