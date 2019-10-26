@@ -26,6 +26,7 @@ def background():
     global sheet
 
     while True:
+        print('loading announcements... ', end='')
         try:
             announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
             if len(announcements) > 0:
@@ -35,6 +36,7 @@ def background():
                 sheet.set_active(announcement, False)
 
                 posts = sheet.get_past()
+                print()
                 print('Updated posts:', posts, file=sys.stderr)
             else:
                 print("no announcements")
@@ -42,7 +44,7 @@ def background():
             time.sleep(3)
         except:
             traceback.print_last(file=sys.stderr)
-            time.sleep(10)
+            time.sleep(5)
 
 thread = threading.Thread(target=background)
 thread.setDaemon(True)
