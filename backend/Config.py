@@ -11,7 +11,9 @@ config_options = [
     'PUSHER_CLUSTER',
     'PUSHER_CHANNEL',
     'SHEET',
-    'SHEET_RANGE'
+    'SHEET_RANGE',
+    'SHEETS_TOKEN_PATH',
+    'SHEETS_CREDENTIALS',
 ]
 
 

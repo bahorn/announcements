@@ -22,3 +22,4 @@ token.pickle
 /terraform.tfstate*
 
 .env
+secrets/

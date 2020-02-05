@@ -21,8 +21,6 @@ sheet: Sheets = Sheets(Settings.SHEET, Settings.SHEET_RANGE)
 sheet.credentials()
 sheet.build_service()
 
-print(sheet)
-
 posts: [Announcement] = sheet.get_past()
 print('Preloaded posts:', posts, file=sys.stderr)
 
@@ -33,7 +31,6 @@ def background():
     while True:
         print('loading announcements... ', end='')
         try:
-            print(sheet.values())
             announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
             if len(announcements) > 0:
                 announcement = announcements.pop(0)
@@ -94,5 +91,4 @@ def send_announcement(message):
 
     channels_client.trigger(Settings.PUSHER_CHANNEL, 'new', message)
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+app.run(host='0.0.0.0', port=5000)
