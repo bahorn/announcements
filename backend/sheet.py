@@ -36,7 +36,7 @@ class Sheets:
                     Settings.SHEETS_CREDENTIALS, self.SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open('token.pickle', 'wb') as token:
+            with open(Settings.SHEETS_TOKEN_PATH, 'wb') as token:
                 pickle.dump(creds, token)
         self.creds = creds
 
