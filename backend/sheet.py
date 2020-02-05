@@ -1,4 +1,5 @@
-import datetime
+#!/usr/bin/env python3
+from datetime import datetime, timedelta
 import os.path
 import pickle
 import time
@@ -45,7 +46,10 @@ class Sheets:
 
     def print_range(self):
         sheet = self.service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
+        result = sheet.values().get(
+            spreadsheetId=self.SPREADSHEET_ID,
+            range=self.RANGE
+        ).execute()
         values = result.get('values', [])
 
         if not values:
@@ -56,13 +60,16 @@ class Sheets:
 
     def get_all(self):
         sheet = self.service.spreadsheets()
+        result = sheet.values().get(
+            spreadsheetId=self.SPREADSHEET_ID,
+            range=self.RANGE
+        ).execute()
 
-        result = sheet.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.RANGE).execute()
         values = result.get('values', [])
         return self.parse_all(values[1:])
 
     def get_past(self):
-        return list(filter(lambda x: x.time < datetime.datetime.now(), self.get_all()))
+        return list(filter(lambda x: x.time < datetime.now(), self.get_all()))
 
     def reset_all(self):
         for a in self.get_all():
@@ -71,23 +78,44 @@ class Sheets:
     def get_active(self):
         return list(filter(lambda x: x.active is True, self.get_all()))
 
-    def get_current_active(self, delta: datetime.timedelta):
-        now = datetime.datetime.now()
-        # print("Between ({}) and ({})".format(str(now - delta), str(now + delta)))
-        # for a in self.get_active():
-        #     print(a.time)
-        return list(filter(lambda x: now - delta <= x.time <= now + delta, self.get_active()))
+    def get_current_active(self, delta: timedelta):
+        now = datetime.now()
+
+        active = self.get_active()
+
+        for i in active:
+            print(i.time)
+        return list(
+            filter(
+                lambda x: now - delta <= x.time <= now + delta,
+                active
+            )
+        )
 
     @staticmethod
     def parse_all(values):
         new_values = []
         for value in values:
-            time = datetime.datetime.strptime(value[2], "%d/%m/%Y %H:%M:%S")
+            if len(value) <= 5:
+                continue
+            try:
+                time = datetime.strptime(value[1], "%d/%m/%Y %H:%M:%S")
+            except ValueError:
+                time = datetime.now()
+
             new_values.append(
-                Announcement(uid=value[0], created_at=value[1], time=time, title=value[3], body=value[4],
-                             active=(value[5] == 'TRUE')))
+                Announcement(
+                    uid=value[0],
+                    created_at=value[1],
+                    time=time,
+                    title=value[3],
+                    body=value[4],
+                    active=(value[5] == 'TRUE')
+                )
+            )
         new_values.sort()
         new_values.reverse()
+        print(new_values)
         return new_values
 
     def get_first(self):
@@ -99,7 +127,6 @@ class Sheets:
         body = {
             'values': [[active]],
         }
-        # pprint(body)
         sheet.update(
             spreadsheetId=self.SPREADSHEET_ID, range=range_name,
             valueInputOption='RAW', body=body).execute()
