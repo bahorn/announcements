@@ -17,6 +17,11 @@ And then specify which google sheet to use by setting the following environment 
 * SHEET (ID of your google doc sheet)
 * SHEET_RANGE (range for the query)
 
+And also specify the folowing:
+
+* SHEETS_TOKEN_PATH - path to the token after you login to google sheets
+* SHEETS_CREDENTIALS - path to your `credentials.json`
+
 And also register a pusher account and set your credentials in the following environmental keys:
 
 * PUSHER_APP_ID
