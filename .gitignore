@@ -20,3 +20,5 @@ token.pickle
 /credentials/
 /.terraform/
 /terraform.tfstate*
+
+.env

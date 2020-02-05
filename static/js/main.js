@@ -127,7 +127,7 @@ function refreshSong() {
 
 $(document).ready(function () {
     //connect to the socket server.
-    const pusher = new Pusher('e26d2d5c77e1ace54c55', {
+    const pusher = new Pusher('a70c948092011a1b9bb5', {
         cluster: 'eu',
         forceTLS: true
     });

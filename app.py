@@ -10,12 +10,18 @@ from flask import Flask, render_template
 from flask_assets import Bundle, Environment
 from flask_bootstrap import Bootstrap
 
+from Config import Settings
+
+print(Settings)
+
 from sheet import Sheets
 from Announcement import Announcement
 
-sheet: Sheets = Sheets('1wpSA1YsQguMT4tqulLR-1niqKHO8oM5qbGne3SWcOzE', 'A1:F')
+sheet: Sheets = Sheets(Settings.SHEET, Settings.SHEET_RANGE)
 sheet.credentials()
 sheet.build_service()
+
+print(sheet)
 
 posts: [Announcement] = sheet.get_past()
 print('Preloaded posts:', posts, file=sys.stderr)
@@ -24,10 +30,10 @@ print('Preloaded posts:', posts, file=sys.stderr)
 def background():
     global posts
     global sheet
-
     while True:
         print('loading announcements... ', end='')
         try:
+            print(sheet.values())
             announcements = sheet.get_current_active(datetime.timedelta(minutes=1))
             if len(announcements) > 0:
                 announcement = announcements.pop(0)
@@ -79,16 +85,14 @@ def announce():
 def send_announcement(message):
     print('Announcing: ' + str(message))
     channels_client = pusher.Pusher(
-        app_id='885408',
-        key='e26d2d5c77e1ace54c55',
-        secret='1e6aa8be2c8dcd2c52c0',
-        cluster='eu',
+        app_id=Settings.PUSHER_APP_ID,
+        key=Settings.PUSHER_KEY,
+        secret=Settings.PUSHER_SECRET,
+        cluster=Settings.PUSHER_CLUSTER,
         ssl=True
     )
 
-    channels_client.trigger('announcements', 'new', message)
+    channels_client.trigger(Settings.PUSHER_CHANNEL, 'new', message)
 
 if __name__ == "__main__":
-    app.run(app, host='0.0.0.0', port=5000)
-    # setup()
-    # announce(str(json.dumps(s.get_all()[10].__dict__, default=str)))
+    app.run(host='0.0.0.0', port=5000)
